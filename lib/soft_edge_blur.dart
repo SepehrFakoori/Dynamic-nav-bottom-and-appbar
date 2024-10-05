@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class SoftEdgeBlurScreen extends StatefulWidget {
   const SoftEdgeBlurScreen({super.key});
@@ -9,26 +10,46 @@ class SoftEdgeBlurScreen extends StatefulWidget {
 }
 
 class _SoftEdgeBlurScreenState extends State<SoftEdgeBlurScreen> {
-  final ScrollController _scrollController = ScrollController();
+  late ScrollController _scrollController;
   double _opacity = 1.0; // Initial opacity for the TextFormField
   bool _showLogo = false; // Control the visibility of the logo
   double _logoPosition = -100; // Initial position of the logo off-screen
+  bool _showNavBottom = true; // Control the visibility of the Navigation bottom
 
   @override
   void initState() {
     super.initState();
+    _scrollController = ScrollController();
     // Add a listener to the ScrollController
     _scrollController.addListener(() {
       setState(() {
-        // Change opacity and logo position based on scroll position
-        if (_scrollController.offset > 50) {
-          _opacity = 0.0; // Fade out the TextFormField
-          _showLogo = true; // Show the logo
-          _logoPosition = 20; // Move the logo to center
-        } else {
-          _opacity = 1.0; // Fade in the TextFormField
-          _showLogo = false; // Hide the logo
-          _logoPosition = -100; // Reset the logo position off-screen
+        if (_scrollController.position.userScrollDirection ==
+            ScrollDirection.forward) {
+          _showNavBottom = true;
+          // Change opacity and logo position based on scroll position
+          if (_scrollController.offset > 50) {
+            _opacity = 0.0; // Fade out the TextFormField
+            _showLogo = true; // Show the logo
+            _logoPosition = 20; // Move the logo to center
+          } else {
+            _opacity = 1.0; // Fade in the TextFormField
+            _showLogo = false; // Hide the logo
+            _logoPosition = -100; // Reset the logo position off-screen
+          }
+        }
+        if (_scrollController.position.userScrollDirection ==
+            ScrollDirection.reverse) {
+          _showNavBottom = false;
+          // Change opacity and logo position based on scroll position
+          if (_scrollController.offset > 50) {
+            _opacity = 0.0; // Fade out the TextFormField
+            _showLogo = true; // Show the logo
+            _logoPosition = 20; // Move the logo to center
+          } else {
+            _opacity = 1.0; // Fade in the TextFormField
+            _showLogo = false; // Hide the logo
+            _logoPosition = -100; // Reset the logo position off-screen
+          }
         }
       });
     });
@@ -98,14 +119,39 @@ class _SoftEdgeBlurScreenState extends State<SoftEdgeBlurScreen> {
     'Sparkling',
     'Twinkling',
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xff363336),
+      bottomNavigationBar: AnimatedContainer(
+        duration: const Duration(milliseconds: 500),
+        child: Visibility(
+          visible: _showNavBottom,
+          child: ClipRRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
+              child: BottomNavigationBar(
+                elevation: 20,
+                backgroundColor: const Color(0xff363336).withOpacity(0.3),
+                unselectedItemColor: Colors.white,
+                selectedItemColor: Colors.blueAccent,
+                items: const [
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.home_filled), label: "Home"),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.settings), label: "Settings"),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       body: Stack(
         children: <Widget>[
           GridView.builder(
-            controller: _scrollController, // Attach the ScrollController
+            controller: _scrollController,
+            // Attach the ScrollController
             itemCount: cardImages.length,
             physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(top: 230),
@@ -135,12 +181,11 @@ class _SoftEdgeBlurScreenState extends State<SoftEdgeBlurScreen> {
                       padding: const EdgeInsets.only(
                           left: 10, right: 10, top: 8, bottom: 8),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.45),
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(5),
-                          topRight: Radius.circular(5),
-                        )
-                      ),
+                          color: Colors.black.withOpacity(0.45),
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(5),
+                            topRight: Radius.circular(5),
+                          )),
                       child: Row(
                         children: [
                           Text(
@@ -150,7 +195,7 @@ class _SoftEdgeBlurScreenState extends State<SoftEdgeBlurScreen> {
                               fontSize: 14,
                             ),
                           ),
-                           const Spacer(),
+                          const Spacer(),
                           Icon(
                             Icons.favorite_border_rounded,
                             color: Colors.grey.shade400,
@@ -184,8 +229,8 @@ class _SoftEdgeBlurScreenState extends State<SoftEdgeBlurScreen> {
           ),
           // Search TextField with animation on scroll
           Positioned(
-            top:
-                120, // Adjust to create more space between the blurred app bar and ListView
+            top: 120,
+            // Adjust to create more space between the blurred app bar and ListView
             left: 16,
             right: 16,
             child: AnimatedOpacity(
@@ -198,12 +243,14 @@ class _SoftEdgeBlurScreenState extends State<SoftEdgeBlurScreen> {
                 child: TextFormField(
                   style: const TextStyle(fontSize: 20), // Text size
                   decoration: InputDecoration(
-                    hintText: 'Search for images', // Placeholder text
-                    hintStyle: const TextStyle(
-                        fontSize: 16, color: Colors.grey), // Hint text style
+                    hintText: 'Search for images',
+                    // Placeholder text
+                    hintStyle:
+                        const TextStyle(fontSize: 16, color: Colors.grey),
+                    // Hint text style
                     filled: true,
-                    fillColor: Colors
-                        .grey.shade800, // Background color with transparency
+                    fillColor: Colors.grey.shade800,
+                    // Background color with transparency
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none, // Remove the border

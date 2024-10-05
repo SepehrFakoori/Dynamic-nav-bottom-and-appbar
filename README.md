@@ -1,4 +1,4 @@
-# Soft Edge Blur Effect with Smooth Animation in Flutter
+# Bottom Navigation visibility and App Bar Blur with Smooth Animation in Flutter
 
 🚀 Just built a new UI with **soft-edge blur effect** that responds dynamically to user scrolls! The blur fades in and out smoothly, while elements like the search bar and logo transition seamlessly. 🌀
 
@@ -10,8 +10,9 @@ https://github.com/user-attachments/assets/d86c7bd9-432d-4d70-8df2-0dcbb57b667e
 
 
 ### Features:
+- **Dynamic Bottom Navigation** that adapts with user scrolls
 - **Dynamic blur effect** that adapts with user scrolls.
-- **Smooth animation** for UI elements like search bars and logos.
+- **Smooth animation** for UI elements like search bars, logos and bottom navigation.
 
 
 💻 Built with **Flutter** for a polished and sleek user experience. It's all about the details that make the interaction feel more intuitive and fluid.
@@ -21,12 +22,12 @@ https://github.com/user-attachments/assets/d86c7bd9-432d-4d70-8df2-0dcbb57b667e
 ### Tech Stack:
 - **Framework:** Flutter
 - **Animation Tools:** `AnimatedOpacity`, `AnimatedPositioned`, and `BackdropFilter`
-- **Design Focus:** Soft blur edges, responsive transitions
+- **Design Focus:** Dynamic bottom navigation, Soft blur edges, responsive transitions
 
 ✨ *Feel free to try out the code and share your thoughts!*
 
 ---
 
 #### Tags: 
-#Flutter #UIDesign #Animation #UX #MobileDevelopment #BlurEffect #FlutterDev
+#Flutter #UIDesign #Animation #UX #MobileDevelopment #DynamicBottomNavigation #BlurEffect #FlutterDev
 
